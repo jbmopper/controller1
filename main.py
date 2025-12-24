@@ -55,6 +55,18 @@ def show_sandbox_config():
     print(f"  Memory: {DEV_SANDBOX_CONFIG.memory_limit_mb}MB")
     print()
 
+def show_contracts():
+    """Display contract fingerprints (prompt/sandbox/metrics)."""
+    from config.contracts import contract_report
+
+    report = contract_report()
+    print(f"\n{'='*60}")
+    print("CONTRACT FINGERPRINTS (sha256)")
+    print(f"{'='*60}")
+    for k, v in report.items():
+        print(f"{k}: {v}")
+    print()
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -76,6 +88,9 @@ def main():
     
     # Sandbox command
     subparsers.add_parser("sandbox", help="Show sandbox configuration")
+
+    # Contracts command
+    subparsers.add_parser("contracts", help="Show contract fingerprints (sha256)")
     
     # Info command - show all
     subparsers.add_parser("info", help="Show all configurations")
@@ -88,11 +103,14 @@ def main():
         show_prompt_contract(args.benchmark)
     elif args.command == "sandbox":
         show_sandbox_config()
+    elif args.command == "contracts":
+        show_contracts()
     elif args.command == "info":
         show_protocol()
         show_prompt_contract("humaneval")
         show_prompt_contract("mbpp")
         show_sandbox_config()
+        show_contracts()
     else:
         parser.print_help()
         print("\n" + "="*60)

@@ -24,6 +24,8 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+from config.contracts import contract_report
+
 
 def get_lm_eval_command(
     model: str,
@@ -204,6 +206,7 @@ def main():
         json.dump({
             "runs": results,
             "timestamp": datetime.now().isoformat(),
+            "contracts": contract_report(),
         }, f, indent=2)
     
     print(f"\nResults saved to: {args.output_dir}")

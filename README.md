@@ -14,6 +14,9 @@ Research project investigating controllers and decoding strategies for LLMs.
 This project uses [uv](https://github.com/astral-sh/uv) for dependency management.
 
 ```bash
+# Ensure uv uses Homebrew Python 3.13 (recommended)
+uv venv --python /opt/homebrew/bin/python3.13
+
 # Activate the virtual environment
 source .venv/bin/activate
 
@@ -61,6 +64,13 @@ docker build -t controller1-sandbox .
 uv run python main.py sandbox
 ```
 
+To verify you are using the same evaluation setup across runs (and to catch
+silent drift), print the contract fingerprints:
+
+```bash
+uv run python main.py contracts
+```
+
 ### 3. Evaluation Metrics
 
 Baselines and compute-matched comparisons:
@@ -90,7 +100,7 @@ CONTROLLER:
   - Total compute: 10 forward passes
 
 FAIR COMPARISON:
-  Controller vs pass@1 from 10 samples
+  Controller vs pass@10 sampling
 ============================================================
 ```
 

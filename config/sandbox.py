@@ -42,8 +42,11 @@ class SandboxConfig:
     allow_network: bool = False
     
     # Docker-specific settings
-    docker_image: str = "python:3.11-slim"
-    docker_user: str = "nobody"  # Run as unprivileged user
+    # Default points at this repo's Dockerfile (`docker build -t controller1-sandbox .`)
+    # so our execution environment is explicit and reproducible.
+    docker_image: str = "controller1-sandbox"
+    # Use a numeric UID:GID so it works across images (our Dockerfile uses uid=1000).
+    docker_user: str = "1000:1000"
     
     # Firejail-specific settings (Linux only)
     firejail_profile: str | None = None
@@ -77,6 +80,7 @@ DEFAULT_SANDBOX_CONFIG = SandboxConfig(
     timeout_seconds=3.0,
     memory_limit_mb=512,
     allow_network=False,
+    docker_image="controller1-sandbox",
 )
 
 

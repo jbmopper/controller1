@@ -10,3 +10,8 @@ dependencies = [
 
 [tool.uv.sources]
 lm-eval = { git = "https://github.com/EleutherAI/lm-evaluation-harness.git" }
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+]

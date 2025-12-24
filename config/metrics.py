@@ -88,10 +88,13 @@ class ControllerMetricConfig:
     
     def get_compute_matched_baseline(self) -> MetricConfig:
         """Get the compute-matched sampling baseline for fair comparison."""
+        # If the controller generates N candidates and then selects 1 output,
+        # the compute-matched non-controller baseline is sampling with N draws.
+        # (This is effectively pass@N at the candidate temperature.)
         return MetricConfig(
-            name=f"pass@1_from_{self.total_forward_passes}_samples",
-            k=1,
-            temperature=0.8,
+            name=f"pass@{self.total_forward_passes}_sampling",
+            k=self.total_forward_passes,
+            temperature=self.candidate_temperature,
             num_samples=self.total_forward_passes,
             description=(
                 f"Sampling baseline with same compute budget as controller "
@@ -155,7 +158,7 @@ class EvaluationProtocol:
             f"  - Total compute: {self.controller.total_forward_passes} forward passes",
             "",
             "FAIR COMPARISON:",
-            f"  Controller vs pass@1 from {self.controller.total_forward_passes} samples",
+            f"  Controller vs pass@{self.controller.total_forward_passes} sampling",
             "=" * 60,
         ])
         return "\n".join(lines)
