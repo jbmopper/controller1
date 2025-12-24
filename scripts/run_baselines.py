@@ -165,8 +165,8 @@ def main():
     parser.add_argument(
         "--num-samples", "-n",
         type=int,
-        default=200,
-        help="Number of samples for pass@k estimation"
+        default=1,
+        help="Number of samples (multi-sample aggregation not implemented here yet; use 1)"
     )
     parser.add_argument(
         "--temperature", "-t",
