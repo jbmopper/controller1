@@ -1,7 +1,9 @@
 # Dockerfile for isolated code execution
 # Used by the sandbox to safely execute generated code
 
-FROM python:3.11-slim
+# Pin to specific Python version for reproducibility
+# Using 3.13 to match the project's requires-python
+FROM python:3.13.1-slim-bookworm
 
 # Security: Create non-root user for execution
 RUN useradd -m -s /bin/bash -u 1000 evaluator

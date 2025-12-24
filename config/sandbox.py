@@ -9,9 +9,13 @@ Options:
 2. Firejail (Linux-only, lighter weight)
 3. Direct execution (only for trusted code / debugging)
 
-The lm-evaluation-harness uses the `code_eval` metric from HuggingFace's
-`evaluate` library, which by default uses multiprocessing with timeouts.
-For true isolation, we wrap this in Docker.
+NOTE: The baseline runner currently shells out to `lm_eval` (lm-evaluation-harness).
+That harness executes generated code using its own runner (typically a local
+multiprocessing/subprocess-based sandbox).
+
+This module defines *our* intended isolation policy for controller experiments.
+If/when we integrate a custom evaluator, it should use this config to execute
+untrusted code inside Docker (or firejail on Linux).
 """
 
 from dataclasses import dataclass, field
@@ -113,10 +117,11 @@ def get_docker_run_command(config: SandboxConfig, code_file: Path) -> list[str]:
 
 # Dockerfile for custom evaluation environment
 DOCKERFILE_TEMPLATE = '''
-FROM python:3.11-slim
+# Pin to specific Python version for reproducibility
+FROM python:3.13.1-slim-bookworm
 
 # Security: run as non-root user
-RUN useradd -m -s /bin/bash evaluator
+RUN useradd -m -s /bin/bash -u 1000 evaluator
 USER evaluator
 
 # Minimal dependencies for code evaluation

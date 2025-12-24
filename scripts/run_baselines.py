@@ -4,13 +4,13 @@ Run baseline evaluations for HumanEval and MBPP.
 
 This script establishes the baselines needed before any controller experiments:
 1. Greedy pass@1 (temp=0) - deterministic baseline
-2. Sampling pass@k - upper bound with multiple samples
+2. Sampling pass@1 (single run) - stochastic baseline for comparison
 
 Usage:
     # Run greedy baseline on HumanEval with a specific model
     uv run python scripts/run_baselines.py --model <model_name> --benchmark humaneval --mode greedy
     
-    # Run sampling baseline (200 samples for pass@k estimation)
+    # Run sampling baseline (single run; repeated runs/aggregation not implemented here yet)
     uv run python scripts/run_baselines.py --model <model_name> --benchmark humaneval --mode sampling
     
     # Run both baselines
@@ -98,7 +98,7 @@ def run_sampling_baseline(
     num_samples: int = 200,
     temperature: float = 0.8,
 ) -> dict:
-    """Run sampling baseline for pass@k estimation."""
+    """Run a single sampling baseline run (pass@1 under a non-zero temperature)."""
     print(f"\n{'='*60}")
     print(f"Running SAMPLING baseline: {model} on {benchmark}")
     print(f"  Temperature: {temperature}")
@@ -108,15 +108,11 @@ def run_sampling_baseline(
     run_dir = output_dir / f"sampling_n{num_samples}_t{temperature}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
     run_dir.mkdir(parents=True, exist_ok=True)
     
-    # For multiple samples, we'll need a custom approach
-    # The lm-eval harness doesn't directly support n>1 via CLI
-    # We'll document this limitation and suggest alternatives
-    
-    print("NOTE: For pass@k with k>1, you need to either:")
-    print("  1. Modify the task YAML to set 'repeats: N'")
-    print("  2. Use the Python API directly")
-    print("  3. Run multiple times and aggregate")
-    print()
+    if num_samples != 1:
+        print("NOTE: This runner currently executes a single lm-eval run.")
+        print("Multi-sample aggregation (pass@k / pass@N) is not implemented here yet.")
+        print("Proceeding with a single run (equivalent to pass@1 under sampling).")
+        print()
     
     cmd = get_lm_eval_command(
         model, benchmark, run_dir, 

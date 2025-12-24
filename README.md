@@ -14,8 +14,8 @@ Research project investigating controllers and decoding strategies for LLMs.
 This project uses [uv](https://github.com/astral-sh/uv) for dependency management.
 
 ```bash
-# Ensure uv uses Homebrew Python 3.13 (recommended)
-uv venv --python /opt/homebrew/bin/python3.13
+# Create venv (uv will use Python 3.13 per .python-version)
+uv venv
 
 # Activate the virtual environment
 source .venv/bin/activate
@@ -23,6 +23,16 @@ source .venv/bin/activate
 # Or run commands directly via uv
 uv run python main.py
 ```
+
+### Python Environments
+
+| Component | Python | Purpose |
+|-----------|--------|---------|
+| **uv venv** | 3.13.x (from `.python-version`) | Model inference, baseline runs, tests |
+| **Docker sandbox** | 3.13.1 (pinned in `Dockerfile`) | Execute generated code in isolation |
+
+Both environments use Python 3.13 for consistency. The Docker image is pinned to
+`python:3.13.1-slim-bookworm` for reproducibility.
 
 ## Project Structure
 
@@ -54,7 +64,8 @@ uv run python main.py prompt --benchmark mbpp
 
 ### 2. Execution Sandbox
 
-Generated code execution uses Docker for isolation by default.
+For controller experiments, generated code execution is intended to use Docker for isolation by default.
+(The current baseline runner shells out to `lm_eval`, which uses its own execution runner.)
 
 ```bash
 # Build the sandbox image
@@ -90,9 +101,7 @@ Seed: 42
 BASELINES:
   - Greedy (temp=0): pass@1
   - Sampling (temp=0.8):
-      pass@1 (n=200)
-      pass@10 (n=200)
-      pass@100 (n=200)
+      pass@1 (n=1)
 
 CONTROLLER:
   - Candidates: 10
@@ -113,12 +122,12 @@ uv run python scripts/run_baselines.py \
     --benchmark humaneval \
     --mode greedy
 
-# Sampling baseline (pass@k estimation)
+# Sampling baseline (single run; multi-sample aggregation not implemented here yet)
 uv run python scripts/run_baselines.py \
     --model bigcode/starcoder2-3b \
     --benchmark humaneval \
     --mode sampling \
-    --num-samples 200 \
+    --num-samples 1 \
     --temperature 0.8
 ```
 

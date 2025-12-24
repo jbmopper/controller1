@@ -5,9 +5,9 @@ Defines the evaluation metrics and baselines for controller experiments.
 
 Key metrics:
 1. pass@1 (deterministic, temp=0) - Baseline greedy performance
-2. pass@k (sampling) - Upper bound with multiple samples  
+2. pass@1 (sampling) - Stochastic baseline (single sampled attempt)
 3. controller pass@1 - Controller-guided single attempt
-4. compute-matched pass@k - Fair comparison with same compute budget
+4. compute-matched pass@N - Fair comparison with same compute budget (N = controller forward passes)
 
 IMPORTANT: When comparing controller methods, you must match compute budgets.
 A controller that uses N forward passes should be compared against pass@k
@@ -45,13 +45,13 @@ class BaselineConfig:
     # Standard temperatures from the literature
     sampling_temperature: float = 0.8
     
-    # pass@k for k in [1, 10, 100]
-    # Requires num_samples >= k for unbiased estimation
-    pass_at_k_values: tuple[int, ...] = (1, 10, 100)
+    # IMPORTANT: The current baseline runner (`scripts/run_baselines.py`) only runs a
+    # single lm-eval invocation per mode. Until we implement multi-sample aggregation,
+    # keep this at pass@1 to remain internally consistent.
+    pass_at_k_values: tuple[int, ...] = (1,)
     
-    # Number of samples for pass@k estimation
-    # 200 samples is standard for estimating up to pass@100
-    num_samples_for_estimation: int = 200
+    # Placeholder for future multi-sample aggregation; currently must be 1.
+    num_samples_for_estimation: int = 1
     
     def get_sampling_metrics(self) -> list[MetricConfig]:
         """Get sampling baseline metrics."""

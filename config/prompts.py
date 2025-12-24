@@ -57,8 +57,9 @@ class HumanEvalPromptConfig:
     max_gen_tokens: int = 1024
     do_sample: bool = False  # Greedy decoding for pass@1
     
-    # Number of samples for pass@k estimation
-    num_samples_for_pass_at_k: int = 200  # Standard for pass@100 estimation
+    # Placeholder for future multi-sample aggregation. The current baseline runner
+    # executes a single attempt per problem per run.
+    num_samples_for_pass_at_k: int = 1
 
 
 @dataclass(frozen=True)
