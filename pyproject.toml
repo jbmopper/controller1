@@ -3,9 +3,10 @@ name = "controller1"
 version = "0.1.0"
 description = "Research on controllers and decoding strategies for LLMs, evaluated on HumanEval/MBPP"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12, <3.13"
 dependencies = [
     "lm-eval",
+    "transformers",
 ]
 
 [tool.uv.sources]
