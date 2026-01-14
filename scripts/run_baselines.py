@@ -27,6 +27,18 @@ from pathlib import Path
 from config.contracts import contract_report
 
 
+def get_device() -> str:
+    """Detect the best available device: CUDA > MPS > CPU."""
+    import torch
+    
+    if torch.cuda.is_available():
+        return "cuda"
+    elif torch.backends.mps.is_available():
+        return "mps"
+    else:
+        return "cpu"
+
+
 def get_lm_eval_command(
     model: str,
     benchmark: str,
@@ -37,11 +49,14 @@ def get_lm_eval_command(
 ) -> list[str]:
     """Build the lm_eval command for a baseline run."""
     
+    device = get_device()
+    print(f"Using device: {device}")
+    
     # Base command
     cmd = [
         "uv", "run", "lm_eval",
         "--model", "hf",
-        "--model_args", f"pretrained={model}",
+        "--model_args", f"pretrained={model},device={device}",
         "--tasks", benchmark,
         "--output_path", str(output_dir),
         "--log_samples",
@@ -82,13 +97,23 @@ def run_greedy_baseline(model: str, benchmark: str, output_dir: Path) -> dict:
     
     result = subprocess.run(cmd, capture_output=False)
     
-    return {
+    run_info = {
         "mode": "greedy",
         "model": model,
         "benchmark": benchmark,
         "output_dir": str(run_dir),
         "exit_code": result.returncode,
+        "timestamp": datetime.now().isoformat(),
+        "contracts": contract_report(),
     }
+    
+    # Save metadata to run directory
+    metadata_file = run_dir / "run_metadata.json"
+    with open(metadata_file, "w") as f:
+        json.dump(run_info, f, indent=2)
+    print(f"Metadata saved to: {metadata_file}")
+    
+    return run_info
 
 
 def run_sampling_baseline(
@@ -124,7 +149,7 @@ def run_sampling_baseline(
     
     result = subprocess.run(cmd, capture_output=False)
     
-    return {
+    run_info = {
         "mode": "sampling",
         "model": model,
         "benchmark": benchmark,
@@ -132,7 +157,17 @@ def run_sampling_baseline(
         "num_samples": num_samples,
         "output_dir": str(run_dir),
         "exit_code": result.returncode,
+        "timestamp": datetime.now().isoformat(),
+        "contracts": contract_report(),
     }
+    
+    # Save metadata to run directory
+    metadata_file = run_dir / "run_metadata.json"
+    with open(metadata_file, "w") as f:
+        json.dump(run_info, f, indent=2)
+    print(f"Metadata saved to: {metadata_file}")
+    
+    return run_info
 
 
 def main():
@@ -196,17 +231,7 @@ def main():
         )
         results.append(result)
     
-    # Save run metadata
-    metadata_file = args.output_dir / "run_metadata.json"
-    with open(metadata_file, "w") as f:
-        json.dump({
-            "runs": results,
-            "timestamp": datetime.now().isoformat(),
-            "contracts": contract_report(),
-        }, f, indent=2)
-    
     print(f"\nResults saved to: {args.output_dir}")
-    print(f"Metadata: {metadata_file}")
 
 
 if __name__ == "__main__":

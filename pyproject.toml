@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "controller1"
 version = "0.1.0"
@@ -5,6 +9,7 @@ description = "Research on controllers and decoding strategies for LLMs, evaluat
 readme = "README.md"
 requires-python = ">=3.12, <3.13"
 dependencies = [
+    "accelerate>=1.12.0",
     "lm-eval",
     "torch>=2.9.1",
     "transformers",
@@ -17,3 +22,7 @@ lm-eval = { git = "https://github.com/EleutherAI/lm-evaluation-harness.git" }
 dev = [
     "pytest>=8.0",
 ]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["config*", "model*", "scripts*"]
