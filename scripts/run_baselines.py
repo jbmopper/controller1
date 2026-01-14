@@ -19,12 +19,18 @@ Usage:
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
 
 from config.contracts import contract_report
+
+# Enable HuggingFace code evaluation
+# lm_eval uses HF's code_eval metric which requires this acknowledgment
+# See: https://arxiv.org/abs/2107.03374 for sandboxing discussion
+os.environ["HF_ALLOW_CODE_EVAL"] = "1"
 
 
 def get_device() -> str:
@@ -56,10 +62,12 @@ def get_lm_eval_command(
     cmd = [
         "uv", "run", "lm_eval",
         "--model", "hf",
-        "--model_args", f"pretrained={model},device={device}",
+        "--model_args", f"pretrained={model},dtype=float32",
+        "--device", device,
         "--tasks", benchmark,
         "--output_path", str(output_dir),
         "--log_samples",
+        "--confirm_run_unsafe_code",  # HumanEval/MBPP execute generated code
     ]
     
     # Generation kwargs based on mode
