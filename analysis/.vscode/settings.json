@@ -2,6 +2,11 @@
   // Analysis subproject: use its own uv-managed venv
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
   // Make local analysis helpers importable (analysis/src/controller1_analysis)
-  "python.analysis.extraPaths": ["${workspaceFolder}/src"]
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/src"
+  ],
+  "cursorpyright.analysis.extraPaths": [
+    "${workspaceFolder}/src"
+  ]
 }
 

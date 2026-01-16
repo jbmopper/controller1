@@ -10,6 +10,7 @@ dependencies = [
   # Plotting
   "matplotlib",
   "seaborn",
+  "plotly",
   # Reactive notebooks (stored as .py)
   "marimo",
   "pyzmq>=27.1.0",
