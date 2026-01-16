@@ -9,3 +9,8 @@ wheels/
 # Virtual environments
 .venv
 .DS_Store
+
+# Analysis subproject
+analysis/.venv/
+analysis/.ipynb_checkpoints/
+analysis/**/.ipynb_checkpoints/
