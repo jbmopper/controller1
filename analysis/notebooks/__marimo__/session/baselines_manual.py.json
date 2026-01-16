@@ -1,0 +1,40 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.19.4"
+  },
+  "cells": [
+    {
+      "id": "aWzV",
+      "code_hash": "90b2ccda1d7a9a55219f77a6495ea58c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"notebook-for-analysis-of-baseline-data-human-version\">Notebook for analysis of baseline data (human version)</h3>\n<span class=\"paragraph\">This notebook should have mostly human-written analysis with less of the AI's \"improvements\", but will use some of the code there as a model.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hbol",
+      "code_hash": "00abcf47a214b35ef8984e4ecf061d12",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "IWnm",
+      "code_hash": null,
+      "outputs": [],
+      "console": []
+    }
+  ]
+}

@@ -1,0 +1,249 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.19.4"
+  },
+  "cells": [
+    {
+      "id": "MJUe",
+      "code_hash": "367aed8ffa2870bbd8f4af481d887d65",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"baseline-results-explorer\">Baseline Results Explorer</h1>\n<span class=\"paragraph\">This notebook lets you browse HumanEval baseline results from <code>controller1</code>.</span>\n<span class=\"paragraph\"><strong>Structure:</strong></span>\n<ul>\n<li>Pick a <strong>run</strong> (e.g., <code>greedy_20260113_230732</code>) and <strong>model</strong> to view detailed results</li>\n<li>The <strong>summary table</strong> at the bottom shows pass@1 across all runs/models</li>\n</ul>\n<span class=\"paragraph\">Results are loaded from <code>../results/baselines/</code> relative to this notebook.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "4fee9c4c7c72ed5ba6253c2221e94491",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><hr />\n<h2 id=\"setup\">Setup</h2>\n<span class=\"paragraph\">Locate the results directory.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "5276bd0a371ea2b4145aa1f0cac97c2e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><hr />\n<h2 id=\"run-model-selection\">Run &amp; Model Selection</h2>\n<span class=\"paragraph\">Choose a run and model to inspect.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "fe42a20e4cada1540ff22984b6111fd1",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><hr />\n<h2 id=\"selected-run-details\">Selected Run Details</h2>\n<span class=\"paragraph\">Shows pass@1 metric and full JSON for the selected run/model.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ROlb",
+      "code_hash": "34d4aeb5d3c55075147acdc7e4fccef3",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><hr />\n<h2 id=\"summary-table\">Summary Table</h2>\n<span class=\"paragraph\">Aggregates pass@1 across all runs and models.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Vxnm",
+      "code_hash": "ba26dd13f83688c45812889a7b3d7fdf",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><hr />\n<h2 id=\"chart\">Chart</h2>\n<span class=\"paragraph\">Visualize pass@1 across runs.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ulZA",
+      "code_hash": "88305c169f04f649b6027344f737fe36",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><hr />\n<h2 id=\"compare-two-runs\">Compare two runs</h2>\n<span class=\"paragraph\">Pick two runs (e.g., M4 fp16 vs 4090 fp32) and compare:</span>\n<ul>\n<li>headline <code>pass@1</code></li>\n<li>key config fields (dtype/device/etc.)</li>\n<li>per-problem outputs (from <code>samples_*.jsonl</code>)</li>\n</ul></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hbol",
+      "code_hash": "00abcf47a214b35ef8984e4ecf061d12",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "2e2fcd005066d9b6ffc1022f865c1e89",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "6cf3d7eb96592bbdcbb6016e005afd3e",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "0603bdbbee20ba1c21ece67189103456",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "89e2a487938a32352ea488e07b09f7fe",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "a52b76b2b5e65dee242afb8bd76f5fb1",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "cc230d1ecd61cb1cd68feb3bc6160f73",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "7c17a89f38ba117f8e02d2f2db693140",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "caff0a4e36269d74587f20ece60bbc8b",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "2ae45b8d61c700e95183329d8b37af3b",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "iLit",
+      "code_hash": "85f27883e00c8da14d6d73e9ff258128",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "ZHCJ",
+      "code_hash": "8b7cdd6ed011df637f305db83c0121ed",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "qnkX",
+      "code_hash": "821e99f16f980731a7f999907a65efc9",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "TqIu",
+      "code_hash": "45f4b2e79b0071444705a8edb9942fd7",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "DnEU",
+      "code_hash": "bcf4d36403a13181b8c706d1f1d9285a",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "ecfG",
+      "code_hash": "054513b42a61e46c1e1e5a5793edd73c",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Pvdt",
+      "code_hash": "2739cbbb654d59896d76c7f3f0afff9b",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "ZBYS",
+      "code_hash": "44196ada680428286863967ea3e1acad",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "aLJB",
+      "code_hash": "345b6e1f27213dd0d16c0135529017a1",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "nHfw",
+      "code_hash": "2f7d33f825b3271c8badb6ef3d949ad3",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "xXTn",
+      "code_hash": "eed10fc0e00b3c983540a3a2d0c911ae",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "AjVT",
+      "code_hash": "a50c4a2cf61079d6f923453b89b4d177",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "pHFh",
+      "code_hash": "c11ace79bf8f1046d885ec5919faea67",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "NCOB",
+      "code_hash": "306b1016fe36a60175967b3ed726f1ef",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "aqbW",
+      "code_hash": "740bb8641c675044fa230b9d44f54fb7",
+      "outputs": [],
+      "console": []
+    }
+  ]
+}
