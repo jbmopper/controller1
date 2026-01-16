@@ -136,32 +136,20 @@ def _(mo, model_dropdown, run_dropdown):
 @app.cell
 def _(model_dirs, model_dropdown):
     if model_dropdown.value is None:
-        model_dir = None
+        _model_dir = None
     else:
-        model_dir = next((p for p in model_dirs if p.name == model_dropdown.value), None)
+        _model_dir = next((p for p in model_dirs if p.name == model_dropdown.value), None)
 
-    if model_dir is None:
+    if _model_dir is None:
         results_json_path = None
-    else:
-        _results_candidates = sorted(model_dir.glob("results_*.json"))
-        results_json_path = _results_candidates[-1] if _results_candidates else None
-    return (results_json_path,)
-
-
-@app.cell
-def _(model_dirs, model_dropdown):
-    if model_dropdown.value is None:
-        model_dir = None
-    else:
-        model_dir = next((p for p in model_dirs if p.name == model_dropdown.value), None)
-
-    if model_dir is None:
         samples_jsonl_path = None
     else:
-        _samples_candidates = sorted(model_dir.glob("samples_*.jsonl"))
+        _results_candidates = sorted(_model_dir.glob("results_*.json"))
+        _samples_candidates = sorted(_model_dir.glob("samples_*.jsonl"))
+        results_json_path = _results_candidates[-1] if _results_candidates else None
         samples_jsonl_path = _samples_candidates[-1] if _samples_candidates else None
 
-    return (samples_jsonl_path,)
+    return results_json_path, samples_jsonl_path
 
 
 @app.cell
@@ -331,94 +319,94 @@ def _(run_a, run_b, run_dirs):
 
 @app.cell
 def _(mo, run_dir_a, run_dir_b):
-    def model_names_for_run(run_dir):
+    def _model_names_for_run(run_dir):
         if run_dir is None:
             return set()
         return {p.name for p in run_dir.iterdir() if p.is_dir()}
 
-    models_a = model_names_for_run(run_dir_a)
-    models_b = model_names_for_run(run_dir_b)
-    common = sorted(models_a & models_b) if models_a and models_b else sorted(models_a | models_b)
+    _models_a = _model_names_for_run(run_dir_a)
+    _models_b = _model_names_for_run(run_dir_b)
+    _common = sorted(_models_a & _models_b) if _models_a and _models_b else sorted(_models_a | _models_b)
 
     model_compare = mo.ui.dropdown(
-        options=common,
-        value=common[0] if common else None,
+        options=_common,
+        value=_common[0] if _common else None,
         label="Model (for comparison)",
     )
-    return model_compare
+    return (model_compare,)
 
 
 @app.cell
 def _(model_compare, run_dir_a, run_dir_b):
-    def pick_latest(globbed):
-        items = sorted(globbed)
-        return items[-1] if items else None
+    def _pick_latest(globbed):
+        _items = sorted(globbed)
+        return _items[-1] if _items else None
 
-    def paths_for(run_dir):
+    def _paths_for(run_dir):
         if run_dir is None or model_compare.value is None:
             return None, None, None
-        model_dir = run_dir / model_compare.value
-        if not model_dir.exists():
-            return model_dir, None, None
-        results_path = pick_latest(model_dir.glob("results_*.json"))
-        samples_path = pick_latest(model_dir.glob("samples_*.jsonl"))
-        return model_dir, results_path, samples_path
+        _model_dir = run_dir / model_compare.value
+        if not _model_dir.exists():
+            return _model_dir, None, None
+        _results_path = _pick_latest(_model_dir.glob("results_*.json"))
+        _samples_path = _pick_latest(_model_dir.glob("samples_*.jsonl"))
+        return _model_dir, _results_path, _samples_path
 
-    model_dir_a, results_path_a, samples_path_a = paths_for(run_dir_a)
-    model_dir_b, results_path_b, samples_path_b = paths_for(run_dir_b)
+    model_dir_a, results_path_a, samples_path_a = _paths_for(run_dir_a)
+    model_dir_b, results_path_b, samples_path_b = _paths_for(run_dir_b)
     return model_dir_a, model_dir_b, results_path_a, results_path_b, samples_path_a, samples_path_b
 
 
 @app.cell
 def _(json, results_path_a, results_path_b):
-    def load_json(path):
+    def _load_json(path):
         if path is None or not path.exists():
             return None
         return json.loads(path.read_text())
 
-    results_a = load_json(results_path_a)
-    results_b = load_json(results_path_b)
+    results_a = _load_json(results_path_a)
+    results_b = _load_json(results_path_b)
     return results_a, results_b
 
 
 @app.cell
 def _(mo, results_a, results_b, run_a, run_b):
-    def extract_headline(blob):
+    def _extract_headline(blob):
         if not isinstance(blob, dict):
             return None, None, None, None
-        he = (blob.get("results", {}) or {}).get("humaneval", {}) or {}
-        p1 = he.get("pass@1,create_test")
-        p1_se = he.get("pass@1_stderr,create_test")
-        cfg = blob.get("config", {}) or {}
-        dtype = cfg.get("model_dtype")
-        device = cfg.get("device")
-        return p1, p1_se, dtype, device
+        _he = (blob.get("results", {}) or {}).get("humaneval", {}) or {}
+        _p1 = _he.get("pass@1,create_test")
+        _p1_se = _he.get("pass@1_stderr,create_test")
+        _cfg = blob.get("config", {}) or {}
+        _dtype = _cfg.get("model_dtype")
+        _device = _cfg.get("device")
+        return _p1, _p1_se, _dtype, _device
 
-    a_p1, a_se, a_dtype, a_device = extract_headline(results_a)
-    b_p1, b_se, b_dtype, b_device = extract_headline(results_b)
-    delta = (a_p1 - b_p1) if (a_p1 is not None and b_p1 is not None) else None
+    _a_p1, _a_se, _a_dtype, _a_device = _extract_headline(results_a)
+    _b_p1, _b_se, _b_dtype, _b_device = _extract_headline(results_b)
+    _delta = (_a_p1 - _b_p1) if (_a_p1 is not None and _b_p1 is not None) else None
 
-    def fmt_pct(x):
+    def _fmt_pct(x):
         return f"{x:.2%}" if isinstance(x, (int, float)) else "—"
 
     mo.md(
         "### Headline\n\n"
-        f"- **Run A**: `{run_a.value}` pass@1={fmt_pct(a_p1)} (± {fmt_pct(a_se)}) dtype={a_dtype or '—'} device={a_device or '—'}\n"
-        f"- **Run B**: `{run_b.value}` pass@1={fmt_pct(b_p1)} (± {fmt_pct(b_se)}) dtype={b_dtype or '—'} device={b_device or '—'}\n"
-        f"- **Δ pass@1 (A−B)**: {fmt_pct(delta) if delta is not None else '—'}"
+        f"- **Run A**: `{run_a.value}` pass@1={_fmt_pct(_a_p1)} (± {_fmt_pct(_a_se)}) dtype={_a_dtype or '—'} device={_a_device or '—'}\n"
+        f"- **Run B**: `{run_b.value}` pass@1={_fmt_pct(_b_p1)} (± {_fmt_pct(_b_se)}) dtype={_b_dtype or '—'} device={_b_device or '—'}\n"
+        f"- **Δ pass@1 (A−B)**: {_fmt_pct(_delta) if _delta is not None else '—'}"
     )
     return
 
 
 @app.cell
-def _(mo, pl, results_a, results_b, run_a, run_b):
+def _(mo, pl, results_a, results_b):
     # Show a small config diff table (extend as needed)
-    def cfg(blob):
+    def _cfg(blob):
         if not isinstance(blob, dict):
             return {}
         return blob.get("config", {}) or {}
 
-    keys = [
+    _keys = [
         "model_dtype",
         "device",
         "model_num_parameters",
@@ -427,26 +415,28 @@ def _(mo, pl, results_a, results_b, run_a, run_b):
         "torch_seed",
         "numpy_seed",
     ]
-    a = cfg(results_a)
-    b = cfg(results_b)
-    rows = []
-    for k in keys:
-        rows.append({"field": k, "A": a.get(k), "B": b.get(k)})
+    _a = _cfg(results_a)
+    _b = _cfg(results_b)
+    _rows = []
+    for _k in _keys:
+        _rows.append({"field": _k, "A": _a.get(_k), "B": _b.get(_k)})
 
-    df = pl.DataFrame(rows)
-    mo.md("### Config (selected fields)")
-    mo.ui.table(df)
+    _df = pl.DataFrame(_rows)
+    mo.vstack([
+        mo.md("### Config (selected fields)"),
+        mo.ui.table(_df),
+    ])
     return
 
 
 @app.cell
 def _(pl, samples_path_a, samples_path_b):
-    def load_samples(path):
+    def _load_samples(path):
         if path is None or not path.exists():
             return None
-        df = pl.read_ndjson(path)
+        _df = pl.read_ndjson(path)
         # normalize a couple convenient columns
-        df = df.with_columns(
+        _df = _df.with_columns(
             pl.col("doc").struct.field("task_id").alias("task_id"),
             pl.col("doc").struct.field("prompt").alias("prompt"),
             pl.col("filtered_resps").list.get(0).list.get(0).alias("completion"),
@@ -457,67 +447,65 @@ def _(pl, samples_path_a, samples_path_b):
             "prompt",
             "completion",
         )
-        return df
+        return _df
 
-    samples_a = load_samples(samples_path_a)
-    samples_b = load_samples(samples_path_b)
+    samples_a = _load_samples(samples_path_a)
+    samples_b = _load_samples(samples_path_b)
     return samples_a, samples_b
 
 
 @app.cell
 def _(mo, samples_a, samples_b):
     if samples_a is None or samples_b is None:
-        mo.md("_No samples file(s) found for one or both runs._")
-        task_options = []
+        _task_options = []
     else:
         # tasks present in both
-        common = sorted(set(samples_a["task_id"].to_list()) & set(samples_b["task_id"].to_list()))
-        task_options = common
+        _task_options = sorted(set(samples_a["task_id"].to_list()) & set(samples_b["task_id"].to_list()))
 
     task = mo.ui.dropdown(
-        options=task_options,
-        value=task_options[0] if task_options else None,
+        options=_task_options,
+        value=_task_options[0] if _task_options else None,
         label="Task (for output diff)",
     )
-    return task
+    return (task,)
 
 
 @app.cell
 def _(difflib, mo, run_a, run_b, samples_a, samples_b, task):
     if task.value is None or samples_a is None or samples_b is None:
-        return
+        mo.md("_Select a task to compare._")
+    else:
+        _a_row = samples_a.filter(samples_a["task_id"] == task.value).head(1)
+        _b_row = samples_b.filter(samples_b["task_id"] == task.value).head(1)
 
-    a_row = samples_a.filter(samples_a["task_id"] == task.value).head(1)
-    b_row = samples_b.filter(samples_b["task_id"] == task.value).head(1)
-    if a_row.height == 0 or b_row.height == 0:
-        mo.md("_Task not found in one of the runs._")
-        return
+        if _a_row.height == 0 or _b_row.height == 0:
+            mo.md("_Task not found in one of the runs._")
+        else:
+            _a_prompt = _a_row["prompt"][0]
+            _a_comp = _a_row["completion"][0] or ""
+            _a_pass = _a_row["pass@1"][0]
 
-    a_prompt = a_row["prompt"][0]
-    a_comp = a_row["completion"][0] or ""
-    a_pass = a_row["pass@1"][0]
+            _b_comp = _b_row["completion"][0] or ""
+            _b_pass = _b_row["pass@1"][0]
 
-    b_prompt = b_row["prompt"][0]
-    b_comp = b_row["completion"][0] or ""
-    b_pass = b_row["pass@1"][0]
+            _diff = "\n".join(
+                difflib.unified_diff(
+                    _a_comp.splitlines(),
+                    _b_comp.splitlines(),
+                    fromfile=f"A:{run_a.value}",
+                    tofile=f"B:{run_b.value}",
+                    lineterm="",
+                )
+            )
 
-    # sanity: prompts should match; show once
-    mo.md(f"### {task.value}")
-    mo.md(f"- **Run A** `{run_a.value}` pass@1={a_pass}\n- **Run B** `{run_b.value}` pass@1={b_pass}")
-    mo.md("#### Prompt")
-    mo.md(f"```python\n{a_prompt}\n```")
-
-    mo.md("#### Completion diff (A → B)")
-    diff = "\n".join(
-        difflib.unified_diff(
-            a_comp.splitlines(),
-            b_comp.splitlines(),
-            fromfile=f"A:{run_a.value}",
-            tofile=f"B:{run_b.value}",
-            lineterm="",
-        )
-    )
-    mo.md(f"```diff\n{diff if diff.strip() else '(no differences)'}\n```")
+            mo.vstack([
+                mo.md(f"### {task.value}"),
+                mo.md(f"- **Run A** `{run_a.value}` pass@1={_a_pass}\n- **Run B** `{run_b.value}` pass@1={_b_pass}"),
+                mo.md("#### Prompt"),
+                mo.md(f"```python\n{_a_prompt}\n```"),
+                mo.md("#### Completion diff (A → B)"),
+                mo.md(f"```diff\n{_diff if _diff.strip() else '(no differences)'}\n```"),
+            ])
     return
 
 
