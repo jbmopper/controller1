@@ -18,6 +18,7 @@ from config.contracts import (
     prompt_contract_fingerprint,
     sandbox_contract_fingerprint,
     protocol_fingerprint,
+    inference_contract_fingerprint,
 )
 
 
@@ -27,6 +28,7 @@ EXPECTED_FINGERPRINTS = {
     "prompt.mbpp": "d85d332cd704a6290562161cf5161b14321aa1fff226424d8227dc033f1aa941",
     "sandbox.default": "09c9e59391defab686c49e6d7c1a7e9d66b5beeb1d990b1b45061b15805a7eee",
     "protocol.default": "b411c43f3edd1cddfe69079397cdf2f36d1899da0457aa8cf4a79159f131a3de",
+    "inference.default": "fe0b2dd0fbee503e6d6b20008a351f9c500e0c3f3ed25d3578e2ba1612431901",
 }
 
 
@@ -89,6 +91,16 @@ class TestContractFingerprints:
         expected = EXPECTED_FINGERPRINTS["protocol.default"]
         assert actual == expected, (
             f"Evaluation protocol changed!\n"
+            f"Expected: {expected}\n"
+            f"Actual:   {actual}"
+        )
+
+    def test_inference_contract(self):
+        """Inference config (dtype, batch_size, etc.) should be stable."""
+        actual = inference_contract_fingerprint()
+        expected = EXPECTED_FINGERPRINTS["inference.default"]
+        assert actual == expected, (
+            f"Inference config changed!\n"
             f"Expected: {expected}\n"
             f"Actual:   {actual}"
         )
