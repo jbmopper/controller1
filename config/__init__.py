@@ -30,6 +30,11 @@ from .metrics import (
     EvaluationProtocol,
     DEFAULT_PROTOCOL,
 )
+from .inference import (
+    InferenceConfig,
+    DType,
+    DEFAULT_INFERENCE_CONFIG,
+)
 
 __all__ = [
     # Prompts
@@ -50,5 +55,9 @@ __all__ = [
     "ControllerMetricConfig",
     "EvaluationProtocol",
     "DEFAULT_PROTOCOL",
+    # Inference
+    "InferenceConfig",
+    "DType",
+    "DEFAULT_INFERENCE_CONFIG",
 ]
 

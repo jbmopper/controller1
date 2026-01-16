@@ -19,6 +19,7 @@ import json
 from typing import Any
 from pathlib import Path
 
+from .inference import DEFAULT_INFERENCE_CONFIG, InferenceConfig
 from .metrics import DEFAULT_PROTOCOL, EvaluationProtocol
 from .prompts import BenchmarkType, get_prompt_config
 from .sandbox import DEFAULT_SANDBOX_CONFIG, SandboxConfig
@@ -74,6 +75,11 @@ def protocol_fingerprint(protocol: EvaluationProtocol | None = None) -> str:
     return fingerprint_json(protocol or DEFAULT_PROTOCOL)
 
 
+def inference_contract_fingerprint(config: InferenceConfig | None = None) -> str:
+    """Fingerprint of the inference config (dtype, batch size, etc.)."""
+    return fingerprint_json(config or DEFAULT_INFERENCE_CONFIG)
+
+
 def contract_report() -> dict[str, str]:
     """Convenience: all key contract fingerprints."""
     return {
@@ -81,6 +87,7 @@ def contract_report() -> dict[str, str]:
         "prompt.mbpp": prompt_contract_fingerprint("mbpp"),
         "sandbox.default": sandbox_contract_fingerprint(DEFAULT_SANDBOX_CONFIG),
         "protocol.default": protocol_fingerprint(DEFAULT_PROTOCOL),
+        "inference.default": inference_contract_fingerprint(DEFAULT_INFERENCE_CONFIG),
     }
 
 

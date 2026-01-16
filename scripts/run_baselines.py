@@ -26,6 +26,7 @@ from datetime import datetime
 from pathlib import Path
 
 from config.contracts import contract_report
+from config.inference import DEFAULT_INFERENCE_CONFIG
 
 # Enable HuggingFace code evaluation
 # lm_eval uses HF's code_eval metric which requires this acknowledgment
@@ -55,32 +56,35 @@ def get_lm_eval_command(
 ) -> list[str]:
     """Build the lm_eval command for a baseline run."""
     
+    # Use fingerprinted inference config for reproducibility
+    inf_cfg = DEFAULT_INFERENCE_CONFIG
+    
     device = get_device()
     print(f"Using device: {device}")
+    print(f"Inference config: dtype={inf_cfg.dtype}, batch_size={inf_cfg.batch_size}, max_new_tokens={inf_cfg.max_new_tokens}")
     
-    # Base command
+    # Base command - settings from fingerprinted inference config
     cmd = [
         "uv", "run", "lm_eval",
         "--model", "hf",
-        "--model_args", f"pretrained={model},dtype=float32",
+        "--model_args", f"pretrained={model},dtype={inf_cfg.dtype}",
         "--device", device,
         "--tasks", benchmark,
         "--output_path", str(output_dir),
         "--log_samples",
         "--confirm_run_unsafe_code",  # HumanEval/MBPP execute generated code
-        "--batch_size", "4",  # Better GPU utilization
+        "--batch_size", str(inf_cfg.batch_size),
     ]
     
     # Generation kwargs based on mode
-    # max_new_tokens=512 is plenty for HumanEval (most solutions < 256 tokens)
-    # Setting explicitly avoids "max_new_tokens vs max_length" warnings
+    # max_new_tokens from config - avoids "max_new_tokens vs max_length" warnings
     if mode == "greedy":
         cmd.extend([
-            "--gen_kwargs", "do_sample=False,max_new_tokens=512",
+            "--gen_kwargs", f"do_sample=False,max_new_tokens={inf_cfg.max_new_tokens}",
         ])
     else:
         cmd.extend([
-            "--gen_kwargs", f"do_sample=True,temperature={temperature},max_new_tokens=512",
+            "--gen_kwargs", f"do_sample=True,temperature={temperature},max_new_tokens={inf_cfg.max_new_tokens}",
             "--num_fewshot", "0",  # For HumanEval
         ])
     
