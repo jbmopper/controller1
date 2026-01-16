@@ -68,16 +68,19 @@ def get_lm_eval_command(
         "--output_path", str(output_dir),
         "--log_samples",
         "--confirm_run_unsafe_code",  # HumanEval/MBPP execute generated code
+        "--batch_size", "4",  # Better GPU utilization
     ]
     
     # Generation kwargs based on mode
+    # max_new_tokens=512 is plenty for HumanEval (most solutions < 256 tokens)
+    # Setting explicitly avoids "max_new_tokens vs max_length" warnings
     if mode == "greedy":
         cmd.extend([
-            "--gen_kwargs", "do_sample=False",
+            "--gen_kwargs", "do_sample=False,max_new_tokens=512",
         ])
     else:
         cmd.extend([
-            "--gen_kwargs", f"do_sample=True,temperature={temperature}",
+            "--gen_kwargs", f"do_sample=True,temperature={temperature},max_new_tokens=512",
             "--num_fewshot", "0",  # For HumanEval
         ])
     

@@ -3,7 +3,7 @@ set -e
 
 echo "== Basic packages =="
 apt update
-apt install -y neovim tmux nvtop curl git
+apt install -y neovim tmux nvtop curl git # assumes root, fine for runpod
 
 echo "== Install uv =="
 if ! command -v uv >/dev/null 2>&1; then
@@ -49,6 +49,9 @@ export HF_DATASETS_CACHE=/workspace/.cache/huggingface/datasets
 # Editor
 export VISUAL=nvim
 export EDITOR=nvim
+
+# Allow HuggingFace code evaluation (HumanEval/MBPP execute generated code)
+export HF_ALLOW_CODE_EVAL=1
 EOF
 
 # Load it now
@@ -58,4 +61,4 @@ echo "== Auto-source env.sh for future shells =="
 grep -q 'source /workspace/env.sh' ~/.bashrc || echo "source /workspace/env.sh" >> ~/.bashrc
 
 echo "== Done. Launching tmux =="
-tmux new -s work || tmux attach -t work
+tmux new -As work 
