@@ -14,6 +14,10 @@ wheels/
 analysis/.venv/
 analysis/.ipynb_checkpoints/
 analysis/**/.ipynb_checkpoints/
+analysis/node_modules/
+analysis/dist/
+analysis/src/.observablehq/
+analysis/src/data/baselines.json
 
 # serena mcp
 .serena
