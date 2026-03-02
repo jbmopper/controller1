@@ -32,9 +32,23 @@
     },
     {
       "id": "IWnm",
-      "code_hash": null,
-      "outputs": [],
-      "console": []
+      "code_hash": "f4d6c5bf1458f37512717ae774397591",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "['greedy_20260113_230732', 'greedy_20260115_204910', 'sampling_n1_t0.8_20260115_210852']\n",
+          "mimetype": "text/plain"
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,10 @@
+title = "controller1 gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Ignore generated marimo session snapshots"
+paths = [
+  '''analysis/notebooks/__marimo__/session/.*\.json$''',
+]

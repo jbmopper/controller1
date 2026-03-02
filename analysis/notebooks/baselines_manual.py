@@ -26,11 +26,15 @@ def _():
     import difflib
 
     import marimo as mo
-    return (mo,)
+    return Path, mo
 
 
 @app.cell
-def _():
+def _(Path):
+    source_dir = Path("../results/baselines/")
+    run_dirs = sorted([p for p in source_dir.iterdir() if p.is_dir()])
+    run_names = [p.name for p in run_dirs]
+    print(run_names)
     return
 
 
